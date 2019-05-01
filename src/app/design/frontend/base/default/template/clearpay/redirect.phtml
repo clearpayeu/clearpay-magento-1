@@ -1,0 +1,41 @@
+<?php /** @var Clearpay_Clearpay_Block_Redirect $this */ ?>
+<script src="<?php echo $this->getRedirectJsUrl() ?>"></script>
+<script>
+    window.addEventListener('load', function() {
+        var returnUrl = <?php echo json_encode($this->getReturnUrl()); ?>;
+        var transactionToken = <?php echo json_encode($this->getOrderToken()); ?>;
+        var clearpayCountryCode = <?php echo jsonEncode($this->getCountryCode()); ?>;
+
+        //modified to suit API V1
+        if( returnUrl === false ) {
+            if (typeof AfterPay.initialize === "function") {                       
+                AfterPay.initialize(clearpayCountryCode);
+            } else {
+                AfterPay.init();
+            }
+        }
+        else {
+            AfterPay.init({
+                relativeCallbackURL: returnUrl
+            });
+        }
+
+        if (!transactionToken) {
+            console.error('Clearpay Error: Order Token is not defined.');
+        }
+
+        switch (window.Clearpay.redirectMode) {
+            case 'lightbox':
+                AfterPay.display({
+                    token: transactionToken
+                });
+                break;
+
+            case 'redirect':
+                AfterPay.redirect({
+                    token: transactionToken
+                });
+                break;
+        }
+    });
+</script>

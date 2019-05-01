@@ -1,0 +1,14 @@
+<script src="<?php echo $this->getRedirectJsUrl() ?>"></script>
+<script>
+    var clearpayReturnUrl = <?php echo Mage::helper('core')->jsonEncode($this->getReturnUrl()) ?>;
+    var clearpayCountryCode = <?php echo Mage::helper('core')->jsonEncode($this->getCountryCode()) ?>;
+</script>
+
+<?php
+$mw_onestepcheckout = Mage::helper('core')->isModuleEnabled("MW_Onestepcheckout");
+?>
+<?php if( $mw_onestepcheckout ): ?>
+	<script src="<?php echo $this->getJsUrl('Clearpay/checkout/mw_onestepcheckout.js') ?> "></script>
+<?php else: ?>
+	<script src="<?php echo $this->getJsUrl('Clearpay/checkout/onepage.js') ?> "></script>
+<?php endif; ?>

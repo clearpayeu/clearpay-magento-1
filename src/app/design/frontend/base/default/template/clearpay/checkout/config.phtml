@@ -1,0 +1,8 @@
+<script>
+//<![CDATA[
+    window.Clearpay = window.Clearpay || {};
+    window.Clearpay.redirectMode = "<?php echo $this->getMode() ?>";
+    window.Clearpay.paymentAction = "<?php echo $this->getPaymentAction(); ?>";
+    window.Clearpay.saveUrl = "<?php echo $this->getUrl('clearpay/payment/start', array('form_key' => Mage::getSingleton('core/session')->getFormKey())) ?>";
+//]]>
+</script>

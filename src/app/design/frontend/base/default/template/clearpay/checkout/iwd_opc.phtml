@@ -1,0 +1,6 @@
+<script src="<?php echo $this->getRedirectJsUrl() ?>"></script>
+<script>
+    var clearpayReturnUrl = <?php echo Mage::helper('core')->jsonEncode($this->getReturnUrl()) ?>;
+    var clearpayCountryCode = <?php echo Mage::helper('core')->jsonEncode($this->getCountryCode()) ?>;
+</script>
+<script src="<?php echo $this->getJsUrl('Clearpay/checkout/iwd_opc.js') ?>"></script>

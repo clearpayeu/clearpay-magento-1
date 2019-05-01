@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<layout>
+
+    <default translate="label" module="page">
+        <reference name="head">
+            <action method="addItem"><type>skin_css</type><name>clearpay/css/clearpay.css</name></action>
+            <block type="clearpay/banner" name="clearpay.banner.requirements" template="clearpay/banner_requirements.phtml" />
+        </reference>
+        <reference name="before_body_end">
+            <block type="clearpay/banner" name="clearpay.banner" template="clearpay/banner.phtml" />
+            <block type="core/template" name="clearpay.modal" template="clearpay/modal.phtml" />
+        </reference>
+    </default>
+
+    <catalog_product_view translate="label">
+        <reference name="before_body_end">
+            <block type="clearpay/catalog_installments" name="clearpay.installments"
+                   template="clearpay/catalog/installments.phtml" data-type="product_list">
+                <action method="setPageType">
+                    <pageType>product_page</pageType>
+                </action>
+            </block>
+        </reference>
+        <reference name="head">
+            <action method="addJs"><script>Clearpay/Installments.js</script></action>
+        </reference>
+    </catalog_product_view>
+
+    <clearpay_payment_redirect>
+        <reference name="root">
+            <action method="setTemplate"><template>page/1column.phtml</template></action>
+        </reference>
+        <reference name="head">
+            <block type="clearpay/config" name="clearpay.redirect.config" template="clearpay/checkout/config.phtml" />
+        </reference>
+        <reference name="content">
+            <block type="clearpay/redirect" name="clearpay.redirect" template="clearpay/redirect.phtml" />
+        </reference>
+    </clearpay_payment_redirect>
+
+    <clearpay_payment_failure translate="label">
+        <label>Clearpay Order Declined</label>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/2columns-right.phtml</template>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="checkout/onepage_failure" name="checkout.failure" template="clearpay/failure.phtml">
+                <block type="cms/block" name="checkout.failure.cms">
+                    <action method="setBlockId">
+                        <block_id>clearpay-order-declined</block_id>
+                    </action>
+                </block>
+            </block>
+        </reference>
+    </clearpay_payment_failure>
+
+    <checkout_cart_index>
+        <reference name="checkout.cart.methods">
+            <block type="clearpay/onetouch" name="clearpay_onetouch" after="checkout.cart.methods.multishipping" template="clearpay/checkout/onetouch.phtml" />
+        </reference>
+    </checkout_cart_index>
+
+    <!-- Default Checkout & MW OneStep Checkout Handlers -->
+    <checkout_onepage_index>
+        <reference name="before_body_end">
+            <!-- Default Checkout & MW OneStep Checkout Handlers -->
+            <block type="clearpay/redirect" name="clearpay.checkout.default.info" after="checkout.onepage" template="clearpay/checkout/default.phtml" />
+	    </reference>
+        <reference name="head">
+            <action method="addJs"><script>Clearpay/checkout/payovertime.js</script></action>
+            <block type="clearpay/config" name="clearpay.default.config" template="clearpay/checkout/config.phtml" />
+        </reference>
+    </checkout_onepage_index>
+
+    <!-- Layout update for supported and tested checkout-->
+    <!-- Aheadworks OneStepCheckout-->
+    <aw_onestepcheckout_index_index>
+        <reference name="head">
+            <action method="addJs"><script>Clearpay/checkout/payovertime.js</script></action>
+            <block type="clearpay/config" name="clearpay.aw.config" template="clearpay/checkout/config.phtml" />
+        </reference>
+        <reference name="content">
+            <block type="clearpay/redirect" name="clearpay.checkout.aw.info" template="clearpay/checkout/aw_onestepcheckout.phtml" />
+        </reference>
+    </aw_onestepcheckout_index_index>
+
+    <!-- Iwd One Page Checkout -->
+    <opc_index_index>
+        <reference name="head">
+            <action method="addJs"><script>Clearpay/checkout/payovertime.js</script></action>
+            <block type="clearpay/config" name="clearpay.iwd.config" template="clearpay/checkout/config.phtml" />
+        </reference>
+        <reference name="content">
+            <block type="clearpay/redirect" name="clearpay.checkout.iwd.info" after="-" template="clearpay/checkout/iwd_opc.phtml" />
+        </reference>
+    </opc_index_index>
+
+    <!-- GoMage LightCheckout -->
+    <gomage_checkout_onepage_index>
+        <reference name="head">
+            <action method="addJs"><script>Clearpay/checkout/payovertime.js</script></action>
+            <block type="clearpay/config" name="clearpay.gomage.config" template="clearpay/checkout/config.phtml" />
+        </reference>
+        <reference name="after_body_start">
+            <block type="clearpay/redirect" name="clearpay.checkout.gomage.info" after="-" template="clearpay/checkout/gomage.phtml" />
+        </reference>
+    </gomage_checkout_onepage_index>
+
+    <!-- FireCheckout OnePageCheckout -->
+    <firecheckout_index_index>
+        <reference name="head">
+            <action method="addJs"><script>Clearpay/checkout/payovertime.js</script></action>
+            <block type="clearpay/config" name="clearpay.firecheckout.config" template="clearpay/checkout/config.phtml" />
+        </reference>
+        <reference name="before_body_end">
+            <block type="clearpay/redirect" name="clearpay.checkout.firecheckout.info" after="-" template="clearpay/checkout/firecheckout.phtml" />
+        </reference>
+    </firecheckout_index_index>
+
+    <!-- Awesome Checkout by Anatta Design -->
+    <anattadesign_awesomecheckout_onepage_index>
+        <reference name="head">
+            <block type="clearpay/require" name="clearpay.default.require" template="clearpay/checkout/require.phtml" />
+            <block type="clearpay/config" name="clearpay.default.config" template="clearpay/checkout/config.phtml" />
+        </reference>
+        <reference name="after_body_start">
+            <block type="clearpay/redirect" name="clearpay.checkout.gomage.info" after="-" template="clearpay/checkout/awesomecheckout.phtml" />
+        </reference>
+    </anattadesign_awesomecheckout_onepage_index>
+
+    <!-- One Step Checkout by FME -->
+    <checkout_onestep_index>
+        <reference name="head">
+            <action method="addJs"><script>Clearpay/checkout/payovertime.js</script></action>
+            <block type="clearpay/config" name="clearpay.quickcheckout.config" template="clearpay/checkout/config.phtml" />
+        </reference>
+        <reference name="after_body_start">
+            <block type="clearpay/redirect" name="clearpay.checkout.quickcheckout.info" after="-" template="clearpay/checkout/quickcheckout.phtml" />
+        </reference>
+    </checkout_onestep_index>
+
+    <!-- All One Step Checkout extension -->
+    <onestepcheckout_index_index>
+        <reference name="head">
+            <action method="addJs"><script>Clearpay/checkout/payovertime.js</script></action>
+            <block type="clearpay/config" name="clearpay.osc.config" template="clearpay/checkout/config.phtml" />
+        </reference>
+	
+	<!-- Magestore_Onestepcheckout -->
+	<!-- Idev_Onestepcheckout -->
+	<!-- Iksanika_Onestepcheckout -->
+        <reference name="before_body_end">
+            <block type="clearpay/redirect" name="clearpay.checkout.magestore.info" after="-" template="clearpay/checkout/onestep.phtml"/>
+        </reference>
+    </onestepcheckout_index_index>
+</layout>

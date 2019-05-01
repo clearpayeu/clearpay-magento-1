@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Clearpay_Clearpay>
+            <version>3.0.1</version>
+        </Clearpay_Clearpay>
+    </modules>
+    <clearpay>
+        <environments>
+            <sandbox>
+                <name>Sandbox</name>
+                <api_url>https://api.eu-sandbox.afterpay.com/</api_url>
+                <web_url>https://portal.sandbox.clearpay.co.uk/</web_url>
+            </sandbox>
+            <production>
+                <name>Production</name>
+                <api_url>https://api.eu.afterpay.com/</api_url>
+                <web_url>https://portal.clearpay.co.uk/</web_url>
+            </production>
+        </environments>
+    </clearpay>
+    <frontend>
+        <secure_url>
+            <clearpay_payment>/clearpay/payment/</clearpay_payment>
+        </secure_url>
+        <routers>
+            <clearpay>
+                <use>standard</use>
+                <args>
+                    <module>Clearpay_Clearpay</module>
+                    <frontName>clearpay</frontName>
+                </args>
+            </clearpay>
+        </routers>
+        <layout>
+            <updates>
+                <clearpay>
+                    <file>clearpay.xml</file>
+                </clearpay>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <fieldsets>
+            <sales_convert_quote_payment>
+                <clearpay_token>
+                    <to_order_payment>*</to_order_payment>
+                </clearpay_token>
+                <clearpay_order_id>
+                    <to_order_payment>*</to_order_payment>
+                </clearpay_order_id>
+            </sales_convert_quote_payment>
+        </fieldsets>
+        <models>
+            <clearpay>
+                <class>Clearpay_Clearpay_Model</class>
+                <resourceModel>clearpay_resource</resourceModel>
+            </clearpay>
+            <clearpay_resource>
+                <class>Clearpay_Clearpay_Model_Resource</class>
+                <entities>
+                </entities>
+            </clearpay_resource>
+        </models>
+        <blocks>
+            <clearpay>
+                <class>Clearpay_Clearpay_Block</class>
+            </clearpay>
+        </blocks>
+        <helpers>
+            <clearpay>
+                <class>Clearpay_Clearpay_Helper</class>
+            </clearpay>
+        </helpers>
+        <resources>
+            <clearpay_setup>
+                <setup>
+                    <module>Clearpay_Clearpay</module>
+                    <class>Mage_Sales_Model_Resource_Setup</class>
+                </setup>
+            </clearpay_setup>
+        </resources>
+        <events>
+            <admin_system_config_changed_section_payment>
+                <observers>
+                    <clearpay_payment_settings_changed>
+                        <class>clearpay/observer</class>
+                        <method>updateOrderLimits</method>
+                    </clearpay_payment_settings_changed>
+                </observers>
+            </admin_system_config_changed_section_payment>
+            <controller_action_predispatch_adminhtml_system_config_edit>
+                <observers>
+                    <clearpay_view_clearpay_settings>
+                        <class>clearpay/observer</class>
+                        <method>addLogWarningMessage</method>
+                    </clearpay_view_clearpay_settings>
+                </observers>
+            </controller_action_predispatch_adminhtml_system_config_edit>
+            <controller_action_postdispatch_checkout_onepage_saveOrder>
+                <observers>
+                    <clearpay_checkout_default_add_token>
+                        <class>clearpay/observer</class>
+                        <method>addTokenToOrderResponse</method>
+                    </clearpay_checkout_default_add_token>
+                </observers>
+            </controller_action_postdispatch_checkout_onepage_saveOrder>
+            <controller_action_postdispatch_aw_onestepcheckout_ajax_placeOrder>
+                <observers>
+                    <clearpay_checkout_default_add_token>
+                        <class>clearpay/observer</class>
+                        <method>addTokenToOrderResponse</method>
+                    </clearpay_checkout_default_add_token>
+                </observers>
+            </controller_action_postdispatch_aw_onestepcheckout_ajax_placeOrder>
+            <controller_action_postdispatch_opc_json_saveOrder>
+                <observers>
+                    <clearpay_checkout_default_add_token>
+                        <class>clearpay/observer</class>
+                        <method>addTokenToOrderResponse</method>
+                    </clearpay_checkout_default_add_token>
+                </observers>
+            </controller_action_postdispatch_opc_json_saveOrder>
+            <controller_action_postdispatch_gomage_checkout_onepage_save>
+                <observers>
+                    <clearpay_checkout_default_add_token>
+                        <class>clearpay/observer</class>
+                        <method>addTokenToOrderResponse</method>
+                    </clearpay_checkout_default_add_token>
+                </observers>
+            </controller_action_postdispatch_gomage_checkout_onepage_save>
+            <controller_action_postdispatch_firecheckout_index_saveOrder>
+                <observers>
+                    <clearpay_checkout_default_add_token>
+                        <class>clearpay/observer</class>
+                        <method>addTokenToOrderResponse</method>
+                    </clearpay_checkout_default_add_token>
+                </observers>
+            </controller_action_postdispatch_firecheckout_index_saveOrder>
+        </events>
+            <controller_action_layout_load_before>
+                <observers>
+                    <attributesethandle>
+                        <type>singleton</type>
+                        <class>clearpay/observer</class>
+                        <method>addModuleToHandle</method>
+                    </attributesethandle>
+                </observers>
+            </controller_action_layout_load_before>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <clearpay_admin after="Mage_Adminhtml">Clearpay_Clearpay_Adminhtml</clearpay_admin>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <crontab>
+        <jobs>
+            <!-- Cron job to fetch current order total limits with Clearpay API -->
+            <Clearpay_updateOrderLimits>
+                <schedule>
+                    <cron_expr>0 6 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>clearpay/observer::updateOrderLimits</model>
+                </run>
+            </Clearpay_updateOrderLimits>
+        </jobs>
+    </crontab>
+    <default>
+        <clearpay>
+            <general>
+                <debug>1</debug>
+            </general>
+            <payovertime_installments>
+                <enable_product_page>1</enable_product_page>
+                <product_page_price_block_selectors><![CDATA[.product-shop .price-box
+.product-essential .price-box]]></product_page_price_block_selectors>
+                <product_page_html_template><![CDATA[<div style="
+     position: relative;
+ font-style: italic;
+ line-height: 1.4;
+" class="clearpay-installments">or 4 interest free payments of {price_here} {region_specific_text}
+<br><img src="{skin_url}frontend/base/default/clearpay/images/clearpay-logo-163x31.png" style="
+    width: 76px;
+    vertical-align: middle;
+    display: inline;
+"></img><a href="#clearpay-what-is-modal" class="clearpay-what-is-modal-trigger">   Learn more </a>
+</div>
+<style type="text/css">.price-box.ciq_price_box .ciq_view_shipping{margin-top:35px}</style>]]></product_page_html_template>
+                <check_order_total_limits>1</check_order_total_limits>
+            </payovertime_installments>
+            <payovertime_checkout>
+                <checkout_headline_html_template><![CDATA[
+<img src="{clearpay_logo}" class="v-middle" id="clearpay-logo" />
+<span id="clearpay-callout">Interest-free payments.</span>
+<a href="#clearpay-what-is-modal" id="what-is-clearpay-trigger">
+    What is Clearpay?
+</a>
+                    ]]>
+                </checkout_headline_html_template>
+                <show_checkout_details>1</show_checkout_details>
+                <checkout_details_html_template><![CDATA[
+<ul class="form-list">
+    <li class="form-alt">
+        <div class="instalments">
+            <p class="header-text">
+                Four interest-free payments {region_specific_text} totalling {order_amount}
+            </p>
+            <ul class="cost">
+                <li>{instalment_amount}</li>
+                <li>{instalment_amount}</li>
+                <li>{instalment_amount}</li>
+                <li>{instalment_amount_last}</li>
+            </ul>
+            <ul class="icon">
+                <li>
+                    <img src="{img_circle_1}" alt="" />
+                </li>
+                <li>
+                    <img src="{img_circle_2}" alt="" />
+                </li>
+                <li>
+                    <img src="{img_circle_3}" alt="" />
+                </li>
+                <li>
+                    <img src="{img_circle_4}" alt="" />
+                </li>
+            </ul>
+            <ul class="instalment">
+                <li>First instalment</li>
+                <li>2 weeks later</li>
+                <li>4 weeks later</li>
+                <li>6 weeks later</li>
+            </ul>
+        </div>
+        <div class="instalment-footer">
+            <p>You'll be redirected to the Clearpay website when you proceed to checkout.</p>
+            <a href="https://www.clearpay.co.uk/terms/" target="_blank">Terms & Conditions</a>
+        </div>
+    </li>
+</ul>
+                        ]]>
+                </checkout_details_html_template>
+                <checkout_mode>lightbox</checkout_mode>
+            </payovertime_checkout>
+            <payovertime_cart>
+                <show_onetouch>1</show_onetouch>
+            </payovertime_cart>
+        </clearpay>
+        <payment>
+            <clearpaypayovertime>
+                <title>Clearpay - Interest-free payments</title>
+                <message><![CDATA[<b>No payment today!</b><br>
+4 equal payments over the next 60 days.]]></message>
+                <order_status>processing</order_status>
+                <allowspecific>0</allowspecific>
+                <order_email>1</order_email>
+                <invoice_create>1</invoice_create>
+                <invoice_email>1</invoice_email>
+                <model>clearpay/method_payovertime</model>
+                <api_mode>sandbox</api_mode>
+				<payment_action>authorize_capture</payment_action>
+                <api_password backend_model="adminhtml/system_config_backend_encrypted"/>
+                <installments_amount>4</installments_amount>
+            </clearpaypayovertime>
+        </payment>
+    </default>
+</config>

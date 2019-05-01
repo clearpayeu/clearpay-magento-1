@@ -1,0 +1,18 @@
+<?php /** @this Clearpay_Clearpay_Block_Catalog_Installments */ ?>
+<script type="text/javascript">
+
+    /** @require /js/Clearpay/Installments.js */
+    Clearpay.Installments.config = <?php echo json_encode($this->getJsConfig()) ?>;
+
+    // render installments amounts on dom:loaded event
+    document.observe('dom:loaded', function () {
+        Clearpay.Installments.render();
+    });
+
+    // re-render installments on every price change for configurable products
+    Product.OptionsPrice.prototype.reload = Product.OptionsPrice.prototype.reload.wrap(function (callOriginal) {
+        callOriginal();
+        Clearpay.Installments.render();
+    });
+
+</script>

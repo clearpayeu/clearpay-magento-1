@@ -1,0 +1,117 @@
+/**
+ * Clearpay Installments JS library
+ *
+ * @package   Clearpay_Clearpay
+ * @author    VEN Development Team <info@ven.com>
+ * @copyright Copyright (c) 2015 VEN Commerce Ltd (http://www.ven.com)
+ *
+ * How to use:
+ *
+ * Define configuration (@see Clearpay_Clearpay_Block_Catalog_Installments::getJsConfig() for detail):
+ * Clearpay.Installments.config = { ... }
+ *
+ * Render installments amount on page:
+ * Clearpay.Installments.render();
+ *
+ * @see app/design/frontend/base/default/template/clearpay/catalog/installments.phtml
+ */
+;(function (Prototype, Element, Product, console) {
+
+    // window.console fallback
+    if (!console) {
+        var f = function () { };
+        console = {
+            log: f, info: f, warn: f, debug: f, error: f
+        };
+    }
+
+    var Clearpay = window.Clearpay = window.Clearpay || {};
+    Clearpay.Installments = Clearpay.Installments || {};
+
+    /** @see Clearpay_Clearpay_Block_Catalog_Installments::getJsConfig() for details */
+    Clearpay.Installments.config = null;
+
+    Clearpay.Installments.render = function () {
+
+        // check all pre-requisites
+        if (!Prototype || !Element) {
+            console.warn('Clearpay: window.Prototype or window.Element is not defined, cannot render installments amount');
+            return;
+        }
+        if (!Product) {
+            console.warn('Clearpay: window.Product is not defined, cannot render installments amount');
+            return;
+        }
+        if (!this.config instanceof Object) {
+            console.warn('Clearpay: Clearpay.Installments.config is not set, cannot render installments amount');
+            return;
+        }
+
+        // find all price-box elements (according to configured selectors)
+        this.config.selectors = this.config.selectors.filter(function(str) {
+            return str.replace(/\s/g, '').length;
+        });
+        var priceBoxes = Prototype.Selector.select(this.config.selectors.join(','), document);
+
+        for (var i = 0; i < priceBoxes.length; i++) {
+            try {
+                // if price-box is visible
+                if (!priceBoxes[i].offsetWidth || !priceBoxes[i].offsetHeight) {
+                    continue;
+                }
+
+                // find 'price' elements and take value from 1st not empty one if there are several of them
+                // 1st priority - "special price"
+                var priceElements = Prototype.Selector.select('.special-price .price', priceBoxes[i]);
+                priceElements = priceElements.concat(Prototype.Selector.select('.price', priceBoxes[i]));
+
+                var price = null;
+                for (var j = 0; j < priceElements.length; j++) {
+                    price = parseFloat(priceElements[j].textContent.replace(/[^\d.]/g, ''));
+                    if (price != NaN) {
+                        break;
+                    }
+                }
+
+                // if price isn't empty and min/max order total condition is satisfied then render installments amount
+                if (price
+                    && (!this.config.minPriceLimit || price >= this.config.minPriceLimit)
+                    && (!this.config.maxPriceLimit || price <= this.config.maxPriceLimit)
+                    && (this.config.clearpayEnabled)
+                ) {
+
+                    var oldElement = priceBoxes[i].nextSibling;
+                    if (oldElement && oldElement instanceof Element
+                        && Element.hasClassName(oldElement, this.config.className)) {
+
+                        oldElement.parentNode.removeChild(oldElement);
+                    }
+
+                    var individualInstalment = price / this.config.installmentsAmount;
+
+                    Element.insert(priceBoxes[i], {
+                        after: this.config.template.replace(this.config.priceSubstitution,
+                            // productOptionsPrice.formatPrice(price / this.config.installmentsAmount)
+                            this.config.currencySymbol + individualInstalment.toFixed(2)
+                        ).replace(this.config.regionSpecific, this.config.regionText)
+                    });
+
+                    Element.addClassName(priceBoxes[i].nextSibling, this.config.className);
+                }
+                else {
+                    var oldElement = priceBoxes[i].nextSibling;
+                    if (oldElement && oldElement instanceof Element
+                        && Element.hasClassName(oldElement, this.config.className)) {
+
+                        oldElement.parentNode.removeChild(oldElement);
+                    }
+                }
+
+            } catch (e) {
+                console.log('Clearpay: Error on processing price-box element: ', e);
+            }
+        }
+
+    };
+
+})(window.Prototype, window.Element, window.Product, window.console);

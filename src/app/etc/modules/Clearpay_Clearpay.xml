@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Clearpay_Clearpay>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Clearpay_Clearpay>
+    </modules>
+</config>
