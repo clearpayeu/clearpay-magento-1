@@ -8,7 +8,7 @@
         </reference>
         <reference name="before_body_end">
             <block type="clearpay/banner" name="clearpay.banner" template="clearpay/banner.phtml" />
-            <block type="core/template" name="clearpay.modal" template="clearpay/modal.phtml" />
+            <block type="clearpay/modal" name="clearpay.modal" template="clearpay/modal.phtml" />
         </reference>
     </default>
 
@@ -62,16 +62,16 @@
         </reference>
     </checkout_cart_index>
 
-    <!-- Default Checkout & MW OneStep Checkout Handlers -->
+    <!-- Default Checkout & MW OneStep Checkout Handlers & Amasty One Step Checkout-->
     <checkout_onepage_index>
-        <reference name="before_body_end">
-            <!-- Default Checkout & MW OneStep Checkout Handlers -->
-            <block type="clearpay/redirect" name="clearpay.checkout.default.info" after="checkout.onepage" template="clearpay/checkout/default.phtml" />
-	    </reference>
         <reference name="head">
             <action method="addJs"><script>Clearpay/checkout/payovertime.js</script></action>
             <block type="clearpay/config" name="clearpay.default.config" template="clearpay/checkout/config.phtml" />
         </reference>
+        <reference name="before_body_end">
+            <!-- Default Checkout & MW OneStep Checkout Handlers -->
+            <block type="clearpay/redirect" name="clearpay.checkout.default.info" after="checkout.onepage" template="clearpay/checkout/default.phtml" />
+	    </reference>
     </checkout_onepage_index>
 
     <!-- Layout update for supported and tested checkout-->
@@ -147,7 +147,7 @@
             <action method="addJs"><script>Clearpay/checkout/payovertime.js</script></action>
             <block type="clearpay/config" name="clearpay.osc.config" template="clearpay/checkout/config.phtml" />
         </reference>
-	
+
 	<!-- Magestore_Onestepcheckout -->
 	<!-- Idev_Onestepcheckout -->
 	<!-- Iksanika_Onestepcheckout -->

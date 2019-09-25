@@ -1,6 +1,8 @@
 <?php Mage::getSingleton('core/session')->setClearpayErrorRedirect('checkout/cart'); ?>
-<script src="<?php echo $this->getRedirectJsUrl() ?>"></script>
-<script>
-    var clearpayReturnUrl = <?php echo Mage::helper('core')->jsonEncode($this->getReturnUrl()) ?>;
-</script>
-<script src="<?php echo $this->getJsUrl('Clearpay/checkout/quickcheckout.js') ?>"></script>
+<?php if (Mage::helper('clearpay/checkout')->noConflict()) { ?>
+    <script src="<?php echo $this->getRedirectJsUrl() ?>"></script>
+    <script>
+        var clearpayReturnUrl = <?php echo Mage::helper('core')->jsonEncode($this->getReturnUrl()) ?>;
+    </script>
+    <script src="<?php echo $this->getJsUrl('Clearpay/checkout/quickcheckout.js') ?>"></script>
+<?php } ?>
