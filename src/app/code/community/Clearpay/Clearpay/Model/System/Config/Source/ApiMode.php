@@ -55,7 +55,7 @@ class Clearpay_Clearpay_Model_System_Config_Source_ApiMode
     {
         if(Mage::app()->getStore()->isAdmin()) {
             $websiteCode = Mage::app()->getRequest()->getParam('website');
-            
+
             if ($websiteCode) {
                 $website = Mage::getModel('core/website')->load($websiteCode);
                 $websiteId = $website->getId();
@@ -69,7 +69,7 @@ class Clearpay_Clearpay_Model_System_Config_Source_ApiMode
                 }
             }
         } else {
-            $websiteId = '';
+            $websiteId = null;
         }
 
         $api = 'api_url';

@@ -39,7 +39,7 @@ class Clearpay_Clearpay_Block_Catalog_Installments extends Mage_Core_Block_Templ
     {
         if (Mage::getStoreConfigFlag(self::XML_CONFIG_PREFIX . 'check_order_total_limits')) {
             // min order total limit for Clearpay Pay Over Time payment method
-            return (int)Mage::getStoreConfig('payment/clearpaypayovertime/min_order_total');
+            return (float)Mage::getStoreConfig('payment/clearpaypayovertime/min_order_total');
         } else {
             return 0;
         }
@@ -49,7 +49,7 @@ class Clearpay_Clearpay_Block_Catalog_Installments extends Mage_Core_Block_Templ
     {
         if (Mage::getStoreConfigFlag(self::XML_CONFIG_PREFIX . 'check_order_total_limits')) {
             // max order total limit for Clearpay Pay Over Time payment method
-            return (int)Mage::getStoreConfig('payment/clearpaypayovertime/max_order_total');
+            return (float)Mage::getStoreConfig('payment/clearpaypayovertime/max_order_total');
         } else {
             return 0;
         }

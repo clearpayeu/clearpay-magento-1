@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Clearpay_Clearpay>
-            <version>3.0.2</version>
+            <version>3.0.3</version>
         </Clearpay_Clearpay>
     </modules>
     <clearpay>
@@ -241,7 +241,7 @@
         </div>
         <div class="instalment-footer">
             <p>You'll be redirected to the Clearpay website when you proceed to checkout.</p>
-            <a href="https://www.clearpay.co.uk/terms/" target="_blank">Terms & Conditions</a>
+            <a href="https://www.clearpay.co.uk/terms" target="_blank">Terms & Conditions</a>
         </div>
     </li>
 </ul>
