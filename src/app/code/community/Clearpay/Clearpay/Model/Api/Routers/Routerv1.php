@@ -58,23 +58,23 @@ class Clearpay_Clearpay_Model_Api_Routers_Routerv1
 
         //make sure we are using the same version of API for consistency purpose
         $gatewayUrl = $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/payments/';
-        
+
         if( !empty($type) && $type == $search_target ) {
-            $url = (substr($gatewayUrl, -1) == '/' ? $gatewayUrl : $gatewayUrl . '/') . 'token:' . urlencode($search_target); 
+            $url = (substr($gatewayUrl, -1) == '/' ? $gatewayUrl : $gatewayUrl . '/') . 'token:' . urlencode($search_target);
         }
         else if( !empty($type) && $type == 'id') {
             $url = (substr($gatewayUrl, -1) == '/' ? $gatewayUrl : $gatewayUrl . '/') . $search_target;
-        }   
+        }
         else if( !empty($type) && $type == 'courier') {
             $url = (substr($gatewayUrl, -1) == '/' ? $gatewayUrl : $gatewayUrl . '/') . $search_target . "/courier/";
-        }   
+        }
         else if( !empty($type) && $type == 'token' ) {
-            $url = $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/orders/' . $search_target; 
-        }  
+            $url = $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/orders/' . $search_target;
+        }
         else {
-            $url = $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/orders/'; 
-        }    
-        
+            $url = $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/orders/';
+        }
+
         return $url;
     }
 
@@ -127,7 +127,7 @@ class Clearpay_Clearpay_Model_Api_Routers_Routerv1
         $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MODE_CONFIG_FIELD);
         $settings     = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getEnvironmentSettings($apiMode);
 
-        return $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/payments/capture/';  
+        return $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/payments/capture/';
     }
 
 
@@ -142,12 +142,12 @@ class Clearpay_Clearpay_Model_Api_Routers_Routerv1
         $settings     = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getEnvironmentSettings($apiMode);
 
         //make sure we are using the same version of API for consistency purpose
-        $gatewayUrl = $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_WEB_URL] . 'checkout';
-        
+        $gatewayUrl = $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_WEB_URL] . 'uk/checkout';
+
         if( !empty($token) ) {
-            $url = (substr($gatewayUrl, -1) == '/' ? $gatewayUrl : $gatewayUrl . '/') . '?token=' . urlencode($token) . '&redirected=1&relativeCallbackUrl='; 
-        }   
-        
+            $url = (substr($gatewayUrl, -1) == '/' ? $gatewayUrl : $gatewayUrl . '/') . '?token=' . urlencode($token) . '&redirected=1&relativeCallbackUrl=';
+        }
+
         return $url;
     }
 }
