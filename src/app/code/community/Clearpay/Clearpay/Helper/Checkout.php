@@ -131,12 +131,7 @@ class Clearpay_Clearpay_Helper_Checkout extends Mage_Checkout_Helper_Url
 
     public function noConflict()
     {
-        switch (Mage::app()->getStore()->getCurrentCurrencyCode())
-        {
-            case 'GBP':
-                return true;
-            default:
-                return false;
-        }
+        $currency = Mage::app()->getStore()->getCurrentCurrencyCode();
+        return in_array($currency, ['GBP']);
     }
 }

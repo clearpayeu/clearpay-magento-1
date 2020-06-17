@@ -13,4 +13,8 @@
 //    });
     Clearpay.CheckoutForm.detailsRender();
 
+    jQuery(Clearpay.CheckoutForm.detailsConfiguration.creditUsedSelector).on('change', function(){
+        Clearpay.CheckoutForm.detailsRender();
+    });
+
 </script>

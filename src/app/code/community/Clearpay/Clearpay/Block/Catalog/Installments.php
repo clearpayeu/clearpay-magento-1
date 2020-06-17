@@ -30,6 +30,7 @@ class Clearpay_Clearpay_Block_Catalog_Installments extends Mage_Core_Block_Templ
     {
         $product = $this->getProduct();
         return Mage::getStoreConfigFlag(self::XML_CONFIG_PREFIX . 'enable_' . $this->getPageType())
+            && Mage::helper('clearpay/checkout')->noConflict()
             && Mage::getModel('clearpay/method_payovertime')->canUseForProduct($product)
             && !$product->isGrouped();
     }

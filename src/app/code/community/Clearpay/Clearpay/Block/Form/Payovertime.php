@@ -17,8 +17,6 @@ class Clearpay_Clearpay_Block_Form_Payovertime extends Clearpay_Clearpay_Block_F
 
     const CONFIG_PATH_SHOW_DETAILS = 'clearpay/payovertime_checkout/show_checkout_details';
 
-    const TEMPLATE_OPTION_TITLE_DEFAULT = 'clearpay/checkout/title.phtml';
-
     const TEMPLATE_OPTION_DETAILS_DEFAULT = 'clearpay/form/payovertime.phtml';
 
     const TEMPLATE_OPTION_TITLE_CUSTOM = 'clearpay/checkout/title_custom.phtml';
@@ -54,6 +52,16 @@ class Clearpay_Clearpay_Block_Form_Payovertime extends Clearpay_Clearpay_Block_F
         return $this->getData('instalment_amount');
     }
 
+    public function getInstalmentAmountCreditUsed()
+    {
+        if (!$this->hasData('instalment_amount_credit_used')) {
+            $formatted = Mage::helper('clearpay')->calculateInstalment(true);
+            $this->setData('instalment_amount_credit_used', $formatted);
+        }
+
+        return $this->getData('instalment_amount_credit_used');
+    }
+
     public function getInstalmentAmountLast()
     {
         if (!$this->hasData('instalment_amount_last')) {
@@ -64,9 +72,29 @@ class Clearpay_Clearpay_Block_Form_Payovertime extends Clearpay_Clearpay_Block_F
         return $this->getData('instalment_amount_last');
     }
 
+    public function getInstalmentAmountLastCreditUsed()
+    {
+        if (!$this->hasData('instalment_amount_last_credit_used')) {
+            $formatted = Mage::helper('clearpay')->calculateInstalmentLast(true);
+            $this->setData('instalment_amount_last_credit_used', $formatted);
+        }
+
+        return $this->getData('instalment_amount_last_credit_used');
+    }
+
     public function getOrderTotal()
     {
         $total = Mage::getSingleton('checkout/session')->getQuote()->getGrandTotal();
+        return Mage::app()->getStore()->formatPrice($total, false);
+    }
+
+    public function getOrderTotalCreditUsed()
+    {
+        $total = Mage::getSingleton('checkout/session')->getQuote()->getGrandTotal();
+        $total = $total - Mage::helper('clearpay')->getCustomerBalance();
+        if ($total < 0) {
+            $total = 0;
+        }
         return Mage::app()->getStore()->formatPrice($total, false);
     }
 
@@ -107,23 +135,27 @@ class Clearpay_Clearpay_Block_Form_Payovertime extends Clearpay_Clearpay_Block_F
     {
         return array(
             'clearpayLogoSubstitution' => '{clearpay_logo}',
-            'clearpayLogo' => $this->getSkinUrl('clearpay/images/clearpay-logo-163x31.png'),
+            'clearpayLogo' => 'https://static.afterpay.com/integration/logo-clearpay-colour-79x15@2x.png',
             'orderAmountSubstitution' => '{order_amount}',
             'orderAmount' => $this->getOrderTotal(),
+            'orderAmountCreditUsed' => $this->getOrderTotalCreditUsed(),
             'regionSpecificSubstitution' => '{region_specific_text}',
             'regionText' => $this->getRegionSpecificText(),
             'installmentAmountSubstitution' => '{instalment_amount}',
             'installmentAmount' => $this->getInstalmentAmount(),
+            'installmentAmountCreditUsed' => $this->getInstalmentAmountCreditUsed(),
             'installmentAmountSubstitutionLast' => '{instalment_amount_last}',
             'installmentAmountLast' => $this->getInstalmentAmountLast(),
+            'installmentAmountLastCreditUsed' => $this->getInstalmentAmountLastCreditUsed(),
             'imageCircleOneSubstitution' => '{img_circle_1}',
-            'imageCircleOne' => $this->getSkinUrl('clearpay/images/checkout/circle_1@2x.png'),
+            'imageCircleOne' => 'https://static.afterpay.com/checkout/circle_1@2x.png',
             'imageCircleTwoSubstitution' => '{img_circle_2}',
-            'imageCircleTwo' => $this->getSkinUrl('clearpay/images/checkout/circle_2@2x.png'),
+            'imageCircleTwo' => 'https://static.afterpay.com/checkout/circle_2@2x.png',
             'imageCircleThreeSubstitution' => '{img_circle_3}',
-            'imageCircleThree' => $this->getSkinUrl('clearpay/images/checkout/circle_3@2x.png'),
+            'imageCircleThree' => 'https://static.afterpay.com/checkout/circle_3@2x.png',
             'imageCircleFourSubstitution' => '{img_circle_4}',
-            'imageCircleFour' => $this->getSkinUrl('clearpay/images/checkout/circle_4@2x.png')
+            'imageCircleFour' => 'https://static.afterpay.com/checkout/Circle_4@2x.png',
+            'creditUsedSelector' => '#use_customer_balance'
         );
     }
 

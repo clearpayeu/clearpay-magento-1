@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Clearpay_Clearpay>
-            <version>3.0.4</version>
+            <version>3.0.5</version>
         </Clearpay_Clearpay>
     </modules>
     <clearpay>
@@ -186,7 +186,7 @@
  font-style: italic;
  line-height: 1.4;
 " class="clearpay-installments">or 4 interest free payments of {price_here} {region_specific_text}
-<br><img src="{skin_url}frontend/base/default/clearpay/images/clearpay-logo-163x31.png" style="
+<br><img src="https://static.afterpay.com/integration/logo-clearpay-colour-79x15@2x.png" style="
     width: 76px;
     vertical-align: middle;
     display: inline;

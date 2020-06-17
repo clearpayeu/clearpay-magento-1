@@ -1,5 +1,23 @@
 # Clearpay Magento 1 Extension Changelog
 
+## Version 3.0.5
+
+_Wed 17 Jun 2020 (AEST)_
+
+### Supported Editions & Versions
+
+- Magento Community Edition (CE) version 1.7 and later.
+- Magento Enterprise Edition (EE) version 1.13 and later.
+
+### Highlights
+
+- Addressed a known potential XSS vulnerability in FancyBox v2.x.
+- Optimised image assets; using CDN-hosted images instead of bundled images.
+- Improved checkout assets to automatically update instalment amounts when option to spend available store credit is selected/deselected.
+- Improved handling of invalid Afterpay/Clearpay configuration.
+
+---
+
 ## Version 3.0.4
 
 _Thu 19 Dec 2019 (AEDT)_
