@@ -16,6 +16,9 @@
  * @method Clearpay_Clearpay_Block_Redirect setReturnUrl(string $url);
  * @method Clearpay_Clearpay_Block_Redirect setRedirectJsUrl(string $url)
  */
+
+use Clearpay_Clearpay_Model_Method_Base as Clearpay_Base;
+
 class Clearpay_Clearpay_Block_Redirect extends Mage_Core_Block_Template
 {
     protected function _construct()
@@ -47,7 +50,7 @@ class Clearpay_Clearpay_Block_Redirect extends Mage_Core_Block_Template
      */
     public function getRedirectJsUrl()
     {
-        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MODE_CONFIG_FIELD);
+        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Base::API_MODE_CONFIG_FIELD);
         $settings     = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getEnvironmentSettings($apiMode);
 
         return $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_WEB_URL] . 'afterpay.js';
@@ -57,15 +60,13 @@ class Clearpay_Clearpay_Block_Redirect extends Mage_Core_Block_Template
      */
     public function getCountryCode()
     {
-        $currencyCode      = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getCurrencyCode();
-        
-        $country = "GB";
+        $countryCode = '';
+        $currency = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getCurrencyCode();
 
-        $countryCode =  array(
-                                "countryCode" => $country
-                            );  
-        
+        if (array_key_exists($currency, Clearpay_Base::CURRENCY_PROPERTIES)){
+            $countryCode = Clearpay_Base::CURRENCY_PROPERTIES[$currency]['jsCountry'];
+        }
 
-        return $countryCode;
+        return array("countryCode" => $countryCode);
     }
 }

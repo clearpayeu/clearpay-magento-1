@@ -1,13 +1,25 @@
 <?php /** @var Clearpay_Clearpay_Block_Banner $this */ ?>
+<?php if (Mage::helper('clearpay/checkout')->noConflict()) { ?>
 <script type="text/javascript">
     window.jQuery || <?php echo $this->getScriptHtml($this->getSkinUrl('clearpay/js/jquery-1.11.2.min.js')); ?>
 </script>
+<script src="<?php echo $this->getJsLibrary() ?>"></script>
 <script type="text/javascript">
-    jQuery.noConflict();
+(function($) {
+    let initClearpayModal = function() {
+    	$(document).on("click", ".clearpay-what-is-modal-trigger, #what-is-clearpay-trigger", function(event) {
+    		event.preventDefault();
+    		Afterpay.launchModal("<?php echo $this->getJsLocale() ?>");
+    	});
+    };
 
-    if (!window.jQuery.fn.fancybox) {
-        <?php echo $this->getScriptHtml($this->getSkinUrl('clearpay/js/fancybox3/jquery.fancybox.min.js')); ?>
-        document.write('<link rel="stylesheet" type="text/css" media="all" href="<?php echo $this->getSkinUrl('clearpay/js/fancybox3/jquery.fancybox.min.css') . '?v=' . $this->getModuleVersion()?>" />');
+    if (typeof Afterpay === 'undefined') {
+    	window.addEventListener('Afterpay.ready', function() {
+    		initClearpayModal();
+    	});
+    } else {
+    	initClearpayModal();
     }
+})(jQuery);
 </script>
-<script src="<?php echo $this->getSkinUrl('clearpay/js/modal.js') ?>"></script>
+<?php } ?>

@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Clearpay_Clearpay>
-            <version>3.0.5</version>
+            <version>3.1.0</version>
         </Clearpay_Clearpay>
     </modules>
     <clearpay>
@@ -181,72 +181,16 @@
                 <enable_product_page>1</enable_product_page>
                 <product_page_price_block_selectors><![CDATA[.product-shop .price-box
 .product-essential .price-box]]></product_page_price_block_selectors>
-                <product_page_html_template><![CDATA[<div style="
-     position: relative;
- font-style: italic;
- line-height: 1.4;
-" class="clearpay-installments">or 4 interest free payments of {price_here} {region_specific_text}
-<br><img src="https://static.afterpay.com/integration/logo-clearpay-colour-79x15@2x.png" style="
-    width: 76px;
-    vertical-align: middle;
-    display: inline;
-"></img><a href="#clearpay-what-is-modal" class="clearpay-what-is-modal-trigger">   Learn more </a>
-</div>
-<style type="text/css">.price-box.ciq_price_box .ciq_view_shipping{margin-top:35px}</style>]]></product_page_html_template>
                 <check_order_total_limits>1</check_order_total_limits>
             </payovertime_installments>
             <payovertime_checkout>
                 <checkout_headline_html_template><![CDATA[
 <img src="{clearpay_logo}" class="v-middle" id="clearpay-logo" />
 <span id="clearpay-callout">Interest-free payments.</span>
-<a href="#clearpay-what-is-modal" id="what-is-clearpay-trigger">
-    What is Clearpay?
-</a>
+<a href="#clearpay-what-is-modal" id="what-is-clearpay-trigger">What is Clearpay?</a>
                     ]]>
                 </checkout_headline_html_template>
                 <show_checkout_details>1</show_checkout_details>
-                <checkout_details_html_template><![CDATA[
-<ul class="form-list">
-    <li class="form-alt">
-        <div class="instalments">
-            <p class="header-text">
-                Four interest-free payments {region_specific_text} totalling {order_amount}
-            </p>
-            <ul class="cost">
-                <li>{instalment_amount}</li>
-                <li>{instalment_amount}</li>
-                <li>{instalment_amount}</li>
-                <li>{instalment_amount_last}</li>
-            </ul>
-            <ul class="icon">
-                <li>
-                    <img src="{img_circle_1}" alt="" />
-                </li>
-                <li>
-                    <img src="{img_circle_2}" alt="" />
-                </li>
-                <li>
-                    <img src="{img_circle_3}" alt="" />
-                </li>
-                <li>
-                    <img src="{img_circle_4}" alt="" />
-                </li>
-            </ul>
-            <ul class="instalment">
-                <li>First instalment</li>
-                <li>2 weeks later</li>
-                <li>4 weeks later</li>
-                <li>6 weeks later</li>
-            </ul>
-        </div>
-        <div class="instalment-footer">
-            <p>You'll be redirected to the Clearpay website when you proceed to checkout.</p>
-            <a href="https://www.clearpay.co.uk/terms" target="_blank">Terms & Conditions</a>
-        </div>
-    </li>
-</ul>
-                        ]]>
-                </checkout_details_html_template>
                 <checkout_mode>lightbox</checkout_mode>
             </payovertime_checkout>
             <payovertime_cart>

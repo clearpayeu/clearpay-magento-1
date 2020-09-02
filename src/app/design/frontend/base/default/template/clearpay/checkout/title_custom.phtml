@@ -5,13 +5,4 @@
     Clearpay.CheckoutForm.titleConfiguration = <?php echo json_encode($this->getTemplateHelper()->getTitleConfiguration()) ?>;
     Clearpay.CheckoutForm.titleRender();
 
-    //<![CDATA[
-    // included inline as this template is loaded through an ajax request
-    if (window.jQuery.fn.fancybox) {
-	    jQuery('#what-is-clearpay-trigger').fancybox();
-    }
-    else {
-    	jQuery('#what-is-clearpay-trigger').hide();
-    }
-    //]]>
 </script>

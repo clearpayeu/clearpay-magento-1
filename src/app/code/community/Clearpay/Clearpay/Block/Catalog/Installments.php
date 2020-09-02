@@ -43,13 +43,16 @@ class Clearpay_Clearpay_Block_Catalog_Installments extends Mage_Core_Block_Templ
 
     public function getHtmlTemplate()
     {
-        $result = Mage::getStoreConfig(self::XML_CONFIG_PREFIX . $this->getPageType() . '_html_template');
-        $result = str_replace(
-            '{skin_url}',
-            Mage::app()->getStore()->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN),
-            $result
-        );
-        return $result;
+        ob_start();
+?>
+<div style="position: relative; font-style: italic; line-height: 1.4;" class="clearpay-installments">
+    or 4 interest-free payments of {price_here} with<br/>
+    <img src="https://static.afterpay.com/integration/logo-clearpay-colour-79x15@2x.png" style="width: 76px; vertical-align: middle; display: inline;" />
+    <a href="#clearpay-what-is-modal" class="clearpay-what-is-modal-trigger">Learn more</a>
+</div>
+<style type="text/css">.price-box.ciq_price_box .ciq_view_shipping{margin-top:35px}</style>
+<?php
+        return ob_get_clean();
     }
 
     public function getMinPriceLimit()
@@ -87,21 +90,12 @@ class Clearpay_Clearpay_Block_Catalog_Installments extends Mage_Core_Block_Templ
         return (int)Mage::getStoreConfig('payment/clearpaypayovertime/installments_amount');
     }
 
-    public function getRegionSpecificText()
-    {
-        if (Mage::app()->getStore()->getCurrentCurrencyCode() == 'GBP') {
-            return 'fortnightly with';
-        }
-    }
-
     public function getJsConfig()
     {
         return array(
             'selectors'          => $this->getCssSelectors(),
             'template'           => $this->getHtmlTemplate(),
             'priceSubstitution'  => '{price_here}',
-            'regionSpecific'     => '{region_specific_text}',
-            'regionText'         => $this->getRegionSpecificText(),
             'minPriceLimit'      => $this->getMinPriceLimit(),
             'maxPriceLimit'      => $this->getMaxPriceLimit(),
             'installmentsAmount' => $this->getInstallmentsAmount(),

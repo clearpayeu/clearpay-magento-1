@@ -11,6 +11,9 @@
  *
  * Building API URL.
  */
+
+use Clearpay_Clearpay_Model_Method_Base as Clearpay_Base;
+
 class Clearpay_Clearpay_Model_Api_Routers_Routerv1
 {
     /**
@@ -34,11 +37,12 @@ class Clearpay_Clearpay_Model_Api_Routers_Routerv1
      * Get the URL for valid payment types
      *
      * @param string $method Which payment method to get the URL for
+     * @param int|null $store_id Which store to get the config from
      * @return string
      */
-    public function getPaymentUrl($method)
+    public function getPaymentUrl($method, $store_id = null)
     {
-        $apiMode      = Mage::getStoreConfig('payment/' . $method . '/' . Clearpay_Clearpay_Model_Method_Base::API_MODE_CONFIG_FIELD);
+        $apiMode      = Mage::getStoreConfig('payment/' . $method . '/' . Clearpay_Base::API_MODE_CONFIG_FIELD, $store_id);
         $settings     = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getEnvironmentSettings($apiMode);
 
         //make sure we are using the same version of API for consistency purpose
@@ -53,7 +57,7 @@ class Clearpay_Clearpay_Model_Api_Routers_Routerv1
      */
     public function getOrdersApiUrl( $search_target = NULL, $type = NULL )
     {
-        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MODE_CONFIG_FIELD);
+        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Base::API_MODE_CONFIG_FIELD);
         $settings     = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getEnvironmentSettings($apiMode);
 
         //make sure we are using the same version of API for consistency purpose
@@ -83,13 +87,16 @@ class Clearpay_Clearpay_Model_Api_Routers_Routerv1
      *
      * @return string
      */
-    public function getRefundUrl($id)
+    public function getRefundUrl($payment)
     {
-        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MODE_CONFIG_FIELD);
+        $store_id = $payment->getOrder()->getStoreId();
+        $order_id = $payment->getData('clearpay_order_id');
+
+        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Base::API_MODE_CONFIG_FIELD, $store_id);
         $settings     = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getEnvironmentSettings($apiMode);
 
         //make sure we are using the same version of API for consistency purpose
-        return $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/payments/' . $id . '/refund';
+        return $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/payments/' . $order_id . '/refund';
     }
 
     /**
@@ -109,7 +116,7 @@ class Clearpay_Clearpay_Model_Api_Routers_Routerv1
      */
     public function getWebRedirectJsUrl()
     {
-        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MODE_CONFIG_FIELD);
+        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Base::API_MODE_CONFIG_FIELD);
         $settings     = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getEnvironmentSettings($apiMode);
 
         return $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_WEB_URL] . 'afterpay.js';
@@ -124,7 +131,7 @@ class Clearpay_Clearpay_Model_Api_Routers_Routerv1
      */
     public function getDirectCaptureApiUrl()
     {
-        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MODE_CONFIG_FIELD);
+        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Base::API_MODE_CONFIG_FIELD);
         $settings     = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getEnvironmentSettings($apiMode);
 
         return $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_API_URL] . 'v1/payments/capture/';
@@ -138,11 +145,17 @@ class Clearpay_Clearpay_Model_Api_Routers_Routerv1
      */
     public function getGatewayApiUrl( $token = NULL )
     {
-        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MODE_CONFIG_FIELD);
+        $apiMode      = Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Base::API_MODE_CONFIG_FIELD);
         $settings     = Clearpay_Clearpay_Model_System_Config_Source_ApiMode::getEnvironmentSettings($apiMode);
+        $currency = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+        $countryCode = 'uk';
+        if (array_key_exists($currency, Clearpay_Base::CURRENCY_PROPERTIES)){
+            $countryCode = Clearpay_Base::CURRENCY_PROPERTIES[$currency]['webCountry'];
+        }
 
         //make sure we are using the same version of API for consistency purpose
-        $gatewayUrl = $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_WEB_URL] . 'uk/checkout';
+        $gatewayUrl = $settings[Clearpay_Clearpay_Model_System_Config_Source_ApiMode::KEY_WEB_URL] . $countryCode . '/checkout';
 
         if( !empty($token) ) {
             $url = (substr($gatewayUrl, -1) == '/' ? $gatewayUrl : $gatewayUrl . '/') . '?token=' . urlencode($token) . '&redirected=1&relativeCallbackUrl=';
