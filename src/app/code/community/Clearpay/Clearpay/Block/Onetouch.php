@@ -9,12 +9,14 @@ class Clearpay_Clearpay_Block_Onetouch extends Mage_Core_Block_Template
      */
     protected function _toHtml()
     {
+        $total = $this->getTotalAmount();
         if  ( Mage::getStoreConfigFlag('clearpay/payovertime_cart/show_onetouch')
                 && Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_ENABLED_FIELD)
                 && Mage::helper('clearpay/checkout')->noConflict()
                 && Mage::getModel('clearpay/method_payovertime')->canUseForCheckoutSession()
-                && $this->getTotalAmount() >= Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MIN_ORDER_TOTAL_FIELD)
-                && $this->getTotalAmount() <= Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MAX_ORDER_TOTAL_FIELD)
+                && $total > 0
+                && $total >= Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MIN_ORDER_TOTAL_FIELD)
+                && $total <= Mage::getStoreConfig('payment/clearpaypayovertime/' . Clearpay_Clearpay_Model_Method_Base::API_MAX_ORDER_TOTAL_FIELD)
             ) {
             return parent::_toHtml();
         } else {
