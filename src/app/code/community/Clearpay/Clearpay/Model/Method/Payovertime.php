@@ -170,6 +170,12 @@ class Clearpay_Clearpay_Model_Method_Payovertime extends Clearpay_Clearpay_Model
      */
     public function resetTransactionToken($quote) {
 
+        $quote
+            ->setData('clearpay_express_checkout', false)
+            ->setData('clearpay_express_amount', null)
+            ->setData('clearpay_express_shipping', null)
+            ->save();
+
         Mage::getSingleton("checkout/session")->getQuote()->getPayment()->setData('clearpay_token', NULL)->save();
 
         if( Mage::getEdition() == Mage::EDITION_ENTERPRISE ) {

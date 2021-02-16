@@ -4,6 +4,8 @@
     <default translate="label" module="page">
         <reference name="head">
             <action method="addItem"><type>skin_css</type><name>clearpay/css/clearpay.css</name></action>
+        </reference>
+        <reference name="before_body_end">
             <block type="clearpay/banner" name="clearpay.banner.requirements" template="clearpay/banner_requirements.phtml" />
         </reference>
     </default>

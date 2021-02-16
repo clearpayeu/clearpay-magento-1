@@ -42,7 +42,7 @@
                                 AfterPay.initialize(window.clearpayCountryCode);
                             } else {
                                 AfterPay.init();
-                            } 
+                            }
                         }
                         else {
                             AfterPay.init({

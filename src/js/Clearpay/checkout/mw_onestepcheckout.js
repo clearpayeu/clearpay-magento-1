@@ -13,15 +13,15 @@ jQuery( document ).ready( function() {
      *
      * - Check if using Clearpay and use new flow, do Ajax and pop up or redirect
      */
-    
+
     //hacks the form to prevent override by other plugins
     jQuery(".btn-checkout").on("click", function(e) {
 
         if (payment.currentMethod == 'clearpaypayovertime') {
-    
+
             e.preventDefault();
-            e.stopPropagation();    
-    
+            e.stopPropagation();
+
             // prepare params
             var params = form.serialize(true);
 
@@ -89,6 +89,6 @@ jQuery( document ).ready( function() {
                     }
                 }
             );
-        }       
+        }
     });
 });
